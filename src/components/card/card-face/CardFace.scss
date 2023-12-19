@@ -1,0 +1,17 @@
+.card-face {
+  background-position: center;
+  box-shadow: inset;
+  width: 300px;
+  height: 180px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+.card-number {
+  margin-top: 84px;
+  font-size: 20px;
+}

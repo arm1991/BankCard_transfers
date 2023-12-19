@@ -1,0 +1,30 @@
+.second-form {
+  height: 200px;
+  width: 200px;
+  background-color: white;
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 2px 6px 20px rgba(88, 85, 85, 0.12);
+
+  & > input {
+    border-radius: 6px;
+    margin-bottom: 20px;
+    padding: 2px;
+    width: 100%;
+  }
+
+  & > button {
+    align-self: center;
+    border-radius: 4px;
+    height: 30px;
+    width: 100px;
+
+    &:hover {
+      filter: brightness(50%);
+      cursor: pointer;
+    }
+  }
+}
