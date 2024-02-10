@@ -1,94 +1,98 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import { notifyError } from "../../utiles/toast";
 import { success } from "../../utiles/success";
-import {
-  checkBalance,
-  checkValid,
-  removeSpaces,
-  senderIsReciever,
-} from "../../helpers/helpers";
-import "./SecondForm.scss";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { initialValues, validationSchema } from "./values";
+import { sendMoney } from "../../redux/slices/usersData.slice";
+import { checkBalance, senderIsReciever } from "../../helpers/helpers";
+import style from "./SecondForm.module.css";
+import "react-toastify/dist/ReactToastify.css";
 
-const SecondForm = () => {
-  const [recieverCardNumber, setRecieverCardNumber] = useState("");
-  const [balance, setBalance] = useState("");
+const SecondForm = ({ sender }) => {
   const dispatch = useDispatch();
-
-  const changeRecieverCardNumber = (value) => {
-    let input = removeSpaces(value);
-
-    // adding spaces
-    input = input.replace(/(\d{4})/g, "$1 ").trim();
-    setRecieverCardNumber(input);
-  };
-
-  const changeBalance = (value) => {
-    setBalance(value);
-  };
+  const usersData = useSelector((state) => state.usersData.usersData);
 
   function changeData(data) {
     localStorage.setItem("usersData", JSON.stringify(data));
   }
 
-  const usersData = useSelector((state) => state.usersData);
-
   useEffect(() => {
     changeData(usersData);
   }, [usersData]);
 
-  const handleClick = () => {
-    if (Array.from(removeSpaces(recieverCardNumber)).length < 16) {
-      notifyError("Something Went Wrong");
-    } else if (
-      senderIsReciever(sender.card_number, removeSpaces(recieverCardNumber))
-    ) {
-      notifyError("Can Not Send Money To Yourself");
-    } else if (checkBalance(+sender.balance, +balance)) {
-      dispatch({
-        type: "send_money",
-        payload: {
-          balance: +balance,
-          sender: sender.card_number,
-          reciever: removeSpaces(recieverCardNumber),
-        },
-      });
-      success("Transfer Confirmed");
-    } else {
+  const handleSubmit = ({ balance_to_send, reciever_card_number }) => {
+    reciever_card_number = reciever_card_number.toString();
+    const { balance, card_number } = sender;
+    if (!checkBalance(balance, balance_to_send)) {
       notifyError("Not Enogh Money");
+    } else if (senderIsReciever(card_number, reciever_card_number)) {
+      notifyError("Can Not Send Money To Yourself");
+    } else {
+      dispatch(
+        sendMoney({ balance_to_send, card_number, reciever_card_number })
+      );
+      success("Succes");
     }
   };
 
-  const sender = useSelector((state) => {
-    return state.usersData.find(
-      (user) => user.card_number === state.currentUser
-    );
-  });
-
   return (
-    <div className="second-form">
-      <p>Insert Amount of Money</p>
-      <input
-        type="number"
-        placeholder="15000"
-        value={balance}
-        onChange={(e) => {
-          changeBalance(e.target.value);
-        }}
+    <>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values) => handleSubmit(values)}
+      >
+        <Form className={style.form} id="second-form">
+          <div className={style.formContainer}>
+            <label htmlFor="balance_to_send" className="label">
+              Insert Amount of Money
+            </label>
+            <span className={style.error}>
+              <ErrorMessage name="balance_to_send" />
+            </span>
+            <Field
+              className={style.formInput}
+              id="balance_to_send"
+              type="number"
+              name="balance_to_send"
+              placeholder="15000"
+            />
+          </div>
+          <div className={style.formContainer}>
+            <label htmlFor="reciever_card_number" className="label">
+              Reciever Card Number
+            </label>
+            <span className={style.error}>
+              <ErrorMessage name="reciever_card_number" />
+            </span>
+            <Field
+              className={style.formInput}
+              id="reciever_card_number"
+              type="number"
+              name="reciever_card_number"
+              placeholder="XXXX XXXX XXXX XXXX"
+            />
+          </div>
+          <button type="submit" className={style.formButton}>
+            Send Money
+          </button>
+        </Form>
+      </Formik>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
-      <p>Insert Reciever Card Number</p>
-      <input
-        type="text"
-        placeholder="XXXX XXXX XXXX XXXX"
-        maxLength={19}
-        value={recieverCardNumber}
-        onChange={(e) => {
-          if (checkValid(e.target.value, "card_number"))
-            changeRecieverCardNumber(e.target.value);
-        }}
-      />
-      <button onClick={handleClick}>Send Money</button>
-    </div>
+    </>
   );
 };
 

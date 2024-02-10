@@ -1,0 +1,31 @@
+.card-face {
+  background-position: center;
+  background-size: contain;
+  box-shadow: inset;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 24px;
+  color: white;
+}
+
+.card-number {
+  margin-top: 120px;
+  font-size: 20px;
+}
+
+.valid-thru {
+  margin-left: 120px;
+  margin-top: 20px;
+}
+
+.name {
+  // margin-top: 8px;
+  font-size: 32px;
+  font-weight: 500;
+}
