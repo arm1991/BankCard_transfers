@@ -15,6 +15,7 @@ function App() {
     if (checkLocalData(dataFromLocal)) {
       localStorage.setItem("usersData", JSON.stringify(data));
       dispatch(setUsersData(data));
+      console.log(data);
     } else {
       dispatch(setUsersData(dataFromLocal));
     }

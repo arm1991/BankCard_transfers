@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { notifyError } from "../../utiles/toast";
@@ -6,6 +6,7 @@ import { success } from "../../utiles/success";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { initialValues, validationSchema } from "./values";
 import { sendMoney } from "../../redux/slices/usersData.slice";
+import { setUser } from "../../redux/slices/currentUser.slice";
 import { checkBalance, senderIsReciever } from "../../helpers/helpers";
 import style from "./SecondForm.module.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +14,8 @@ import "react-toastify/dist/ReactToastify.css";
 const SecondForm = ({ sender }) => {
   const dispatch = useDispatch();
   const usersData = useSelector((state) => state.usersData.usersData);
+
+  const [moneySend, setMoneySend] = useState(false);
 
   function changeData(data) {
     localStorage.setItem("usersData", JSON.stringify(data));
@@ -23,6 +26,7 @@ const SecondForm = ({ sender }) => {
   }, [usersData]);
 
   const handleSubmit = ({ balance_to_send, reciever_card_number }) => {
+    if (moneySend) return;
     reciever_card_number = reciever_card_number.toString();
     const { balance, card_number } = sender;
     if (!checkBalance(balance, balance_to_send)) {
@@ -34,6 +38,10 @@ const SecondForm = ({ sender }) => {
         sendMoney({ balance_to_send, card_number, reciever_card_number })
       );
       success("Succes");
+      setMoneySend((prev) => !prev);
+      setTimeout(() => {
+        dispatch(setUser(null));
+      }, 6000);
     }
   };
 
