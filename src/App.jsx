@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { data, images } from "./config/config";
 import { checkLocalData } from "./helpers/helpers";
@@ -15,7 +15,7 @@ function App() {
     if (checkLocalData(dataFromLocal)) {
       localStorage.setItem("usersData", JSON.stringify(data));
       dispatch(setUsersData(data));
-      console.log(data);
+      console.log("Users u can log in: ", data);
     } else {
       dispatch(setUsersData(dataFromLocal));
     }

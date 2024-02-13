@@ -1,5 +1,7 @@
 @media screen and (max-width: 900px) {
   .page {
+    padding: 80px 0;
+    height: max-content;
     flex-direction: column;
   }
 }

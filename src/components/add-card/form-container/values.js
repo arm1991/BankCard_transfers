@@ -13,12 +13,14 @@ export const validationSchema = Yup.object({
   name: Yup.string()
     .min(3, "Too Short")
     .max(15, "Too Long")
-    .required("Required"),
+    .required("Required")
+    .matches(/^[A-Za-z]+$/, "Only letters"),
   surname: Yup.string()
     .min(3, "Too Short")
     .max(20, "Too Long")
-    .required("Required"),
-  card_number: Yup.string()
+    .required("Required")
+    .matches(/^[A-Za-z]+$/, "Only letters"),
+    card_number: Yup.string()
     .max(16, "Must be 16 characters")
     .min(16, "Must be 16 characters")
     .matches(/^\d{16}$/, "Invalid card number")

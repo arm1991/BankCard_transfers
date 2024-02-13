@@ -107,7 +107,7 @@ const FormContainer = () => {
                 <label htmlFor="valid_thru_month" className={style.label}>
                   Exp Date
                 </label>
-                <span className={style.error}>
+                <span className={`${style.error} ${style.smallError}`}>
                   <ErrorMessage name="valid_thru_month" />
                 </span>
                 <Field
@@ -124,7 +124,7 @@ const FormContainer = () => {
                   htmlFor="valid_thru_year"
                   className={style.label}
                 ></label>
-                <span className={style.error}>
+                <span className={`${style.error} ${style.smallError}`}>
                   <ErrorMessage name="valid_thru_year" />
                 </span>
                 <Field
